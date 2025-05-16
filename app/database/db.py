@@ -8,6 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import DeclarativeBase
 from settings import get_settings
 
+print(f"{get_settings().db_user}|{get_settings().db_password}")
+
 DATABASE_URL = (
     "postgresql+asyncpg://"
     f"{get_settings().db_user}:{get_settings().db_password}@"

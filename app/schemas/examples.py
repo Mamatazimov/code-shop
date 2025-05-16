@@ -12,3 +12,11 @@ class ExampleUser:
     role = "user"
     banned = False
     verified = True
+
+class ExampleProduct:
+
+    id = 3
+    code = "def add(a,b):\n    return a+b"
+    price = 5600
+    product_name = "Add funksiyasi"
+    

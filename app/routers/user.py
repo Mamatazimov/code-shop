@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database.db import get_database
 from managers.auth import can_edit_user, is_admin, oauth2_schema
 from managers.user import UserManager
+from managers.product_manager import ProductManager
 from utils.enums import RoleType
 from models import User
 from schemas.user import UserChangePasswordRequest, UserEditRequest, MyUserResponse, UserResponse
@@ -27,6 +28,8 @@ async def get_users(user_id: Optional[int] = None, db: AsyncSession = Depends(ge
 
     This route is only allowed for Admins.
     """
+    a= await ProductManager.get_product_by_id(user_id,db)
+    print(a)
     if user_id:
         return await UserManager.get_user_by_id(user_id, db)
     return await UserManager.get_all_users(db)

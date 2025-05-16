@@ -4,6 +4,9 @@
 from utils.enums import RoleType
 from pydantic import BaseModel, ConfigDict, Field
 from schemas.examples import ExampleUser
+from typing import List
+from .product import ProductResponse
+
 
 
 class UserBase(BaseModel):
@@ -61,6 +64,9 @@ class UserResponse(UserBase):
     role: RoleType = Field(examples=[ExampleUser.role])
     banned: bool = Field(examples=[ExampleUser.banned])
     verified: bool = Field(examples=[ExampleUser.verified])
+    products: List[ProductResponse] = []
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MyUserResponse(UserBase):
@@ -68,3 +74,9 @@ class MyUserResponse(UserBase):
 
     first_name: str = Field(examples=[ExampleUser.first_name])
     last_name: str = Field(examples=[ExampleUser.last_name])
+    products: List[ProductResponse] = []
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+

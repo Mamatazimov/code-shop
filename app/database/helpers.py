@@ -1,4 +1,4 @@
-from models import User
+from models import User, ProductCode
 from typing import Any
 from sqlalchemy import select
 from collections.abc import Sequence
@@ -34,3 +34,33 @@ class UserDB:
         new_user = User(**user_data)
         session.add(new_user)
         return new_user
+    
+class ProductDB:
+
+    @staticmethod
+    async def all(session: AsyncSession) -> Sequence[ProductCode]:
+        result = await session.execute(select(ProductCode))
+        return result.scalars().all()
+
+    @staticmethod
+    async def get(session: AsyncSession, code: str | None = None, p_id: int | None = None) -> ProductCode | None:
+        if code:
+            result = await session.execute(select(ProductCode).where(ProductCode.code == code))
+            return result.scalars().first()
+        
+        elif p_id:
+            result = await session.execute(select(ProductCode).where(ProductCode.id == p_id))
+            return result.scalars().first()
+
+        else:
+            raise ValueError(f"There in not like this product with this {code} name in DataBase")
+
+    @staticmethod
+    async def create(session: AsyncSession, product_data: dict[str, Any]) -> ProductCode:
+        new_product = ProductCode(**product_data)
+        session.add(new_product)
+        return new_product
+    
+
+
+
