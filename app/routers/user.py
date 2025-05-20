@@ -28,8 +28,7 @@ async def get_users(user_id: Optional[int] = None, db: AsyncSession = Depends(ge
 
     This route is only allowed for Admins.
     """
-    a= await ProductManager.get_product_by_id(user_id,db)
-    print(a)
+
     if user_id:
         return await UserManager.get_user_by_id(user_id, db)
     return await UserManager.get_all_users(db)

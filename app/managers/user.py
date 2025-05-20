@@ -52,7 +52,7 @@ class UserManager:
         try:
             email_validation = validate_email(new_user["email"], check_deliverability=False)
             new_user["email"] = email_validation.email
-
+            
             # actually add the new user to the database
             _ = await UserDB.create(session, user_data=new_user)
             await session.flush()

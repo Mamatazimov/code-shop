@@ -6,8 +6,8 @@ from schemas.examples import  ExampleProduct
 class ProductBase(BaseModel):
 
     code: str = Field(examples=[ExampleProduct.code])
-    price : float = Field(example = [ExampleProduct.price])
-    product_name : str = Field(example = [ExampleProduct.product_name])
+    price : float = Field(example = ExampleProduct.price)
+    product_name : str = Field(example = ExampleProduct.product_name)
 
 
 class ProductResponse(ProductBase):

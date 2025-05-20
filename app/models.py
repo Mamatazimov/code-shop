@@ -35,6 +35,7 @@ class User(Base):
     product_codes: Mapped[list["ProductCode"]] = relationship(
         secondary=user_product_association,
         back_populates="users",
+        lazy="selectin"
     )
 
     def __repr__(self) -> str:
@@ -54,6 +55,7 @@ class ProductCode(Base):
     users: Mapped[list[User]] = relationship(
         secondary=user_product_association,
         back_populates="product_codes",
+        lazy="selectin"
     )
     def __repr__(self) -> str:
         """Define the model representation."""
