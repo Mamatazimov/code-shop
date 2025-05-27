@@ -102,6 +102,18 @@ async def edit_user(user_id: int, user_data: UserEditRequest, db: AsyncSession =
     await UserManager.update_user(user_id, user_data, db)
     return await db.get(User, user_id)
 
+@router.put(
+    "/edit/myself",
+    dependencies=[Depends(oauth2_schema)],
+    status_code=status.HTTP_200_OK,
+    response_model=MyUserResponse,
+)
+async def edit_user(user_data: UserEditRequest,request:Request, db: AsyncSession = Depends(get_database)) -> Union[User, None]:
+    """Update user's data by himself"""
+    user_id: int = request.state.user.id
+    await UserManager.update_user(user_id, user_data, db)
+    return await db.get(User, user_id)
+
 
 @router.delete("/{user_id}", dependencies=[Depends(oauth2_schema), Depends(is_admin)], status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(user_id: int, db: AsyncSession = Depends(get_database)) -> None:

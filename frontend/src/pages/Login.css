@@ -1,0 +1,34 @@
+.logChangeBtn{
+    width:100%;
+}
+
+.logChangeBtn *{
+    margin-left: 1rem;
+    vertical-align: middle;
+}
+
+.loginForm{
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem rgba(0,0,0,0.5);
+    padding: 3rem;
+    margin-bottom: 1rem;
+}
+
+.loginForm *{
+    max-width: 30rem;
+    margin: auto;
+    margin-bottom: 1rem;
+    padding: 0.5rem 2rem;
+    border-radius: 0.3rem;
+}
+
+.loginForm button{
+    width: 15.5rem;
+    margin-bottom: 1rem;
+}
+
+
+
+

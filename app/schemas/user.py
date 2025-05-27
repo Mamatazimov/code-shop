@@ -74,6 +74,7 @@ class MyUserResponse(UserBase):
 
     first_name: str = Field(examples=[ExampleUser.first_name])
     last_name: str = Field(examples=[ExampleUser.last_name])
+    role: str
     products: List[ProductResponse] = []
 
     model_config = ConfigDict(from_attributes=True)

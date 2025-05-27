@@ -9,8 +9,8 @@ from utils.enums import RoleType
 user_product_association = Table(
     "user_product_association",
     Base.metadata,
-    Column("user_id", ForeignKey("users.id"), primary_key=True),
-    Column("product_code_id", ForeignKey("product_codes.id"), primary_key=True),
+    Column("user_id", ForeignKey("users.id",ondelete="CASCADE"), primary_key=True),
+    Column("product_code_id", ForeignKey("product_codes.id",ondelete="CASCADE"), primary_key=True),
 )
 
 class User(Base):
