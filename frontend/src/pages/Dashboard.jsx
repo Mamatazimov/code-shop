@@ -3,6 +3,7 @@ import { useEffect,useState,useRef } from "react";
 import axios from "axios";
 import { FaRegCopy,FaAngleDown,FaAngleRight } from "react-icons/fa";
 import Modal from "../components/Modal";
+import api from "../api/Api";
 
 
 function Dashboard() {
@@ -24,9 +25,8 @@ function Dashboard() {
             setLoad(false);
         }
         // User ma'lumotlarini olish
-        axios.get("http://127.0.0.1:8000/users/me",{
-            headers:{Authorization: `Bearer ${localStorage.getItem("token")}`}
-        }).then(response => {
+        api.get("/users/me"
+        ).then(response => {
             console.log(response.data);
             localStorage.setItem("role",response.data.role);
 
@@ -38,9 +38,8 @@ function Dashboard() {
             navigate("/login");
         })
         // User codelarini olish
-        axios.get("http://127.0.0.1:8000/products/my",{
-            headers:{Authorization: `Bearer ${localStorage.getItem("token")}`}
-        }).then(response => {
+        api.get("/products/my"
+        ).then(response => {
             console.log(response.data);
             setData(response.data);
             setLoad(false)
@@ -91,28 +90,19 @@ function Dashboard() {
 
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/users/edit/myself", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({ email,password,first_name,last_name }),
-            });
+            const response = await api.put("/users/edit/myself", 
+                { email:email,password:password,first_name:first_name,last_name:last_name }
+            );
 
-            if (response.ok) {
-                const responseData = await response.json();
+            const responseData = response.data
 
-                console.log(responseData)
-                emailRef.current.value = "";
-                passwordRef.current.value = '';
-                firstNameRef.current.value = '';
-                lastNameRef.current.value = '';
+            console.log(responseData)
+            emailRef.current.value = "";
+            passwordRef.current.value = '';
+            firstNameRef.current.value = '';
+            lastNameRef.current.value = '';
 
-            } else {
-                console.error("Formni jo'natishda xatolik yuz berdi.");
-                Msg("Xatolik yuz berdi!","red",5000)
-            }
+
         } catch (error) {
             console.error("Tarmoq xatosi:", error);
         }
@@ -146,7 +136,7 @@ function Dashboard() {
             <button style={{borderColor:"red"}} onClick={logout}>Logout</button>
 
             </div>
-            <div className="userCodes" style={{maxWidth:"40rem"}}>
+            <div className="userCodes" style={{maxWidth:"45rem"}}>
                 <h2 style={{textAlign:"center"}} >Codelar</h2>
 
                 {data.length === 0 ? <h2 style={{textAlign:"center",opacity:"0.7"}}>Data yo'q...</h2>:

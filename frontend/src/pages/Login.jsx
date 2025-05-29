@@ -3,6 +3,7 @@ import './Login.css'
 import { ImArrowLeft2,ImArrowRight2 } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
+import api from "../api/Api";
 
 
 
@@ -33,29 +34,21 @@ function Login(){
 
         // Form ma'lumotlarini yuborish
         try {
-            const response = await fetch("http://127.0.0.1:8000/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email,password }),
-            });
+            const response = await api.post("http://127.0.0.1:8000/login", 
+                { email:email,password:password }
+            );
 
-            if (response.ok) {
-                const responseData = await response.json();
-                localStorage.setItem("token",responseData.token);
-                localStorage.setItem("refresh",responseData.refresh);
-                
+            const responseData = response.data;
+            localStorage.setItem("token",responseData.token);
+            localStorage.setItem("refresh",responseData.refresh);
+            
 
 
-                console.log(responseData)
-                lemailRef.current.value = "";
-                lpasswordRef.current.value = '';
-                navigate("/dashboard");
-            } else {
-                console.error("Formni jo'natishda xatolik yuz berdi.");
-                Msg("Xatolik yuz berdi. Email yoki Parol xato!","red",5000)
-            }
+            console.log(responseData)
+            lemailRef.current.value = "";
+            lpasswordRef.current.value = '';
+            navigate("/dashboard");
+        
         } catch (error) {
             console.error("Tarmoq xatosi:", error);
         }
@@ -72,16 +65,11 @@ function Login(){
 
         // Form ma'lumotlarini yuborish
         try {
-            const response = await fetch("http://127.0.0.1:8000/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email,password,first_name,last_name }),
-            });
+            const response = await fetch("http://127.0.0.1:8000/register", 
+                { email:email,password:password,first_name:first_name,last_name:last_name }
+            );
 
-            if (response.ok) {
-                const responseData = await response.json();
+                const responseData = response.data;
                 localStorage.setItem("token",responseData.token);
                 localStorage.setItem("refresh",responseData.refresh);
 
@@ -92,10 +80,7 @@ function Login(){
                 lastNameRef.current.value = '';
 
                 navigate("/dashboard");
-            } else {
-                console.error("Formni jo'natishda xatolik yuz berdi.");
-                Msg("Xatolik yuz berdi!","red",5000)
-            }
+
         } catch (error) {
             console.error("Tarmoq xatosi:", error);
         }

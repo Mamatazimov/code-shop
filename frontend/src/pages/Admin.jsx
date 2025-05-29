@@ -3,6 +3,7 @@ import { useState,useEffect,useRef } from "react";
 import axios from "axios";
 import { FaRegTrashAlt,FaPlus } from "react-icons/fa";
 import Modal from "../components/Modal";
+import api from "../api/Api";
 
 
 function Admin() {
@@ -24,7 +25,7 @@ function Admin() {
     // hamma product
     const [products, setProducts] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:8000/products')
+        api.get('/products')
             .then(response => {
                 setProducts(response.data);
             })
@@ -35,9 +36,7 @@ function Admin() {
 
     // product o'chirish
     const handleClick = (p_id) => {
-        axios.delete(`http://localhost:8000/products/${p_id}`,{
-            headers:{Authorization:`Bearer ${localStorage.getItem("token")}`}
-            })
+        api.delete(`/products/${p_id}`)
             .then(response => {
                 console.log(response.data);
             })
@@ -65,28 +64,19 @@ function Admin() {
 
         // Form ma'lumotlarini yuborish
         try {
-            const response = await fetch("http://127.0.0.1:8000/products/new", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization:`Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({ code,price,product_name }),
-            });
+            const response = await api.post("http://127.0.0.1:8000/products/new", 
+                { code:code,price:price,product_name:product_name }
+            );
 
-            if (response.ok) {
-                const responseData = await response.json();
+            const responseData = response.data
 
-                setProducts(prevItems => [...prevItems,responseData])
+            setProducts(prevItems => [...prevItems,responseData])
 
-                console.log(responseData)
-                rname.current.value = "";
-                rprice.current.value = '';
-                rcode.current.value = '';
+            console.log(responseData)
+            rname.current.value = "";
+            rprice.current.value = '';
+            rcode.current.value = '';
 
-            } else {
-                console.error("Formni jo'natishda xatolik yuz berdi.");
-            }
         } catch (error) {
             console.error("Tarmoq xatosi:", error);
         }

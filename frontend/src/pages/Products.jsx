@@ -1,4 +1,5 @@
 import axios from 'axios';
+import api from '../api/Api';
 import { useEffect, useState } from 'react';
 import Modal from "../components/Modal";
 import Message from '../components/Message';
@@ -7,7 +8,7 @@ function Products() {
     const [bbtn,setbbtn] = useState();
     const [products, setProducts] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:8000/products')
+        api.get('/products')
             .then(response => {
                 setProducts(response.data);
             })
@@ -22,9 +23,8 @@ function Products() {
         event.preventDefault()
         setModalOpen(false)
         Msg("Siz bizning 1000-foydalanuvchimiz bo'lganiz uchun bu mahsulotni sizga tekinga beramiz. Aslida hali to'lov usullaridan foydalanishni bilmayman shu uchun bu mahsulot siz uchun tekin :] ","white",30000)
-        axios.get(`http://localhost:8000/products/add/${bbtn}`,{
-            headers:{Authorization: `Bearer ${localStorage.getItem("token")}`}
-        }).then(response => {
+        api.get(`/products/add/${bbtn}`)
+        .then(response => {
             console.log(response.data)
         }).catch(error =>{
             console.log(error)

@@ -30,12 +30,12 @@ api.interceptors.response.use(
 
       try {
         const res = await axios.post("http://localhost:8000/refresh", {
-          refresh_token: refreshToken,
+          refresh: refreshToken,
         });
 
-        const newAccessToken = res.data.access_token;
+        const newAccessToken = res.data.token;
 
-        localStorage.setItem("access_token", newAccessToken);
+        localStorage.setItem("token", newAccessToken);
 
         // Tokenni yangilab, requestni qaytadan yuboramiz
         api.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
