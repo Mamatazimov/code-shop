@@ -3,7 +3,7 @@
 from typing import Any, Optional, Type
 from email_validator import EmailNotValidError, validate_email
 from fastapi import HTTPException, status
-from passlib.context import CryptContext
+from argon2 import PasswordHasher
 from sqlalchemy import delete, update
 from sqlalchemy.exc import IntegrityError
 from database.helpers import UserDB
@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from utils.enums import RoleType
 from schemas.user import UserChangePasswordRequest, UserEditRequest
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+ph = PasswordHasher()
 
 
 class ErrorMessages:
@@ -45,7 +45,7 @@ class UserManager:
         # and can cause random testing issues
         new_user = user_data.copy()
 
-        new_user["password"] = pwd_context.hash(user_data["password"])
+        new_user["password"] = ph.hash(user_data["password"])
         new_user["banned"] = False
         new_user["verified"] = True
 
@@ -75,8 +75,13 @@ class UserManager:
     async def login(user_data: dict[str, str], session: AsyncSession) -> tuple[str, str]:
         """Log in an existing User."""
         user_do = await UserDB.get(session, email=user_data["email"])
+        try:
+            ph.verify(str(user_do.password), user_data["password"])
+            vrfy = True
+        except Exception:
+            vrfy = False
 
-        if not user_do or not pwd_context.verify(user_data["password"], str(user_do.password)) or bool(user_do.banned):
+        if not user_do or not vrfy or bool(user_do.banned):
             raise HTTPException(status.HTTP_400_BAD_REQUEST, ErrorMessages.AUTH_INVALID)
 
         if not bool(user_do.verified):
@@ -108,7 +113,7 @@ class UserManager:
                 email=user_data.email,
                 first_name=user_data.first_name,
                 last_name=user_data.last_name,
-                password=pwd_context.hash(user_data.password),
+                password=ph.hash(user_data.password),
             )
         )
 
@@ -120,7 +125,7 @@ class UserManager:
             raise HTTPException(status.HTTP_404_NOT_FOUND, ErrorMessages.USER_INVALID)
 
         await session.execute(
-            update(User).where(User.id == user_id).values(password=pwd_context.hash(user_data.password))
+            update(User).where(User.id == user_id).values(password=ph.hash(user_data.password))
         )
 
     @staticmethod

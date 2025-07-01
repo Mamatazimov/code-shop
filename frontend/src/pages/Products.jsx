@@ -3,6 +3,7 @@ import api from '../api/Api';
 import { useEffect, useState } from 'react';
 import Modal from "../components/Modal";
 import Message from '../components/Message';
+import { ImItalic } from 'react-icons/im';
 
 function Products() {
     const [bbtn,setbbtn] = useState();
@@ -58,6 +59,7 @@ function Products() {
         <div className='products-page'>
             <h1>Mahsulotlar</h1>
             <div className='products'>
+                {products.length === 0 && <h3 style={{fontStyle:"italic",opacity:"50%"}}>Mahsulotlar mavjud emas</h3>}
                 {products && products.map((product) => (
                     <div className='product' key={product.id}>
                         <h2>{product.product_name}</h2>

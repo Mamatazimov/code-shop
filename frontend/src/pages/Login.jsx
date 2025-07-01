@@ -65,7 +65,7 @@ function Login(){
 
         // Form ma'lumotlarini yuborish
         try {
-            const response = await fetch("http://127.0.0.1:8000/register", 
+            const response = await api.post("http://127.0.0.1:8000/register", 
                 { email:email,password:password,first_name:first_name,last_name:last_name }
             );
 
